@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Leftover Chef: tick the leftovers in your kitchen and get practical recipes with a zero-waste score.">
+  <title>Leftover Chef</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-mode="home">
+  <a class="skip" href="#results-h">Skip to recipes</a>
+
+  <header class="top">
+    <div class="awning" aria-hidden="true"></div>
+    <div class="sign">
+      <h1>Leftover Chef</h1>
+      <div class="sign-text">
+        <p class="lede">Tick what's left in the kitchen. Get a dish to cook tonight and a score for how much you saved from the bin.</p>
+        <fieldset class="mode-switch" id="mode-switch">
+          <legend class="sr">Choose a mode</legend>
+          <label for="mode-home"><input type="radio" name="mode" id="mode-home" value="home" checked><span>Home Mode</span></label>
+          <label for="mode-restaurant"><input type="radio" name="mode" id="mode-restaurant" value="restaurant"><span>Restaurant Mode</span></label>
+        </fieldset>
+      </div>
+    </div>
+  </header>
+
+  <div id="view-app">
+    <main class="layout" id="main">
+      <div class="left">
+        <section class="panel" aria-labelledby="pantry-h">
+          <div class="panel-head">
+            <h2 id="pantry-h">What's left?</h2>
+            <span id="count" class="count" aria-live="polite"></span>
+            <button type="button" id="clear" class="link-btn">Clear all</button>
+          </div>
+          <div class="search">
+            <label for="search">Search ingredients</label>
+            <input id="search" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="suggest" aria-describedby="search-help search-msg" autocomplete="off" placeholder="Type an ingredient, e.g. paneer">
+            <ul id="suggest" role="listbox" aria-label="Matching ingredients" hidden></ul>
+            <p id="search-help" class="sr">Use the up and down arrows to choose, then press Enter to tick it.</p>
+            <p id="search-msg" class="search-msg" aria-live="polite"></p>
+          </div>
+          <div id="pantry"></div>
+          <p id="staples" class="staples"></p>
+        </section>
+
+        <section class="panel board" aria-labelledby="twists-h">
+          <div class="panel-head"><h2 id="twists-h">Twists</h2><span class="muted">stack as many as you like</span></div>
+          <div id="twists" class="twist-list"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="shop-h">
+          <div class="panel-head"><h2 id="shop-h">Shopping list <span id="shop-count"></span></h2></div>
+          <div id="shopping"></div>
+        </section>
+      </div>
+
+      <section class="right" aria-labelledby="results-h">
+        <div class="results-head">
+          <h2 id="results-h" tabindex="-1">Recipe challenges</h2>
+          <p id="summary" class="muted" aria-live="polite"></p>
+        </div>
+        <div id="mode-note" class="mode-note"></div>
+
+        <form id="filters" class="filters" aria-label="Quick filters">
+          <div class="f-row">
+            <label for="f-diet">Diet
+              <select id="f-diet"><option value="any">Any</option><option value="veg">Vegetarian</option><option value="nonveg">Non-veg</option></select>
+            </label>
+            <label for="f-time">Cooking time
+              <select id="f-time"><option value="0">Any time</option><option value="10">10 min or less</option><option value="15">15 min or less</option><option value="20">20 min or less</option><option value="30">30 min or less</option></select>
+            </label>
+            <fieldset class="eq">
+              <legend>Equipment I have</legend>
+              <label class="chip small" for="eq-stove"><input type="checkbox" id="eq-stove" checked><span>Stove</span></label>
+              <label class="chip small" for="eq-blender"><input type="checkbox" id="eq-blender" checked><span>Blender</span></label>
+            </fieldset>
+          </div>
+          <fieldset class="meals">
+            <legend>Meal type</legend>
+            <label class="chip small" for="meal-all"><input type="radio" name="meal" id="meal-all" value="all" checked><span>All</span></label>
+            <label class="chip small" for="meal-breakfast"><input type="radio" name="meal" id="meal-breakfast" value="breakfast"><span>Breakfast</span></label>
+            <label class="chip small" for="meal-lunch"><input type="radio" name="meal" id="meal-lunch" value="lunch"><span>Lunch</span></label>
+            <label class="chip small" for="meal-dinner"><input type="radio" name="meal" id="meal-dinner" value="dinner"><span>Dinner</span></label>
+            <label class="chip small" for="meal-snacks"><input type="radio" name="meal" id="meal-snacks" value="snacks"><span>Snacks</span></label>
+            <label class="chip small" for="meal-dessert"><input type="radio" name="meal" id="meal-dessert" value="dessert"><span>Dessert</span></label>
+            <button type="button" id="clear-filters" class="link-btn" hidden>Clear filters</button>
+          </fieldset>
+        </form>
+
+        <div class="how" aria-label="How the zero-waste score works">
+          <strong>How the zero-waste score works (0–100)</strong>
+          <span><b>Up to 70</b> for how many of your ticked leftovers the recipe uses. Items that spoil fast (marked with a dot) count 3×.</span>
+          <span><b>Up to 30</b> for how many of the recipe's main items you already have. Salt, oil and spices are assumed.</span>
+          <span class="legend"><i data-tier="hero"></i>80+ Zero-waste hero <i data-tier="good"></i>50–79 Good save <i data-tier="partial"></i>Under 50 Partial save</span>
+        </div>
+        <div id="results"></div>
+      </section>
+    </main>
+  </div>
+
+  <main id="view-page" class="page" hidden></main>
+
+  <footer class="foot">
+    <div class="foot-inner">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <p id="contact"></p>
+      </div>
+      <nav aria-label="Policies and documentation">
+        <p class="eyebrow">Pages</p>
+        <ul>
+          <li><a href="#privacy">Privacy Policy</a></li>
+          <li><a href="#terms">Terms &amp; Conditions</a></li>
+          <li><a href="#refunds">Refund Policy</a></li>
+          <li><a href="#cookies">Cookies Policy</a></li>
+          <li><a href="#docs">Documentation (DOC-01 to DOC-06)</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="eyebrow">Your data</p>
+        <p class="foot-btns"><button type="button" class="link-btn" id="cookie-settings">Cookie settings</button>
+        <button type="button" class="link-btn" id="reset-demo">Reset demo data</button></p>
+      </div>
+    </div>
+    <p class="fine">© 2026 Team Leftover Chef. Free prototype for OWASP NIE VibeSprint 1.0. Recipes, text and graphics made by the team; no third-party images. Fonts: Alfa Slab One and Instrument Sans (SIL Open Font License).</p>
+  </footer>
+
+  <div id="cookie" class="cookie" role="region" aria-labelledby="cookie-h" hidden>
+    <h2 id="cookie-h">Your data choice</h2>
+    <p>We set no cookies and send nothing anywhere. Your browser can remember your picks on this device if you want. <a href="#cookies">Cookies Policy</a></p>
+    <div class="ck-opts">
+      <label for="ck-essential-box"><input type="checkbox" id="ck-essential-box" checked disabled> Essential: remember this choice</label>
+      <label for="ck-remember"><input type="checkbox" id="ck-remember"> Remember my picks, filters and shopping list on this device</label>
+    </div>
+    <div class="ck-btns">
+      <button type="button" class="btn" id="ck-save">Save my choice</button>
+      <button type="button" class="btn ghost" id="ck-essential">Essential only</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="detail"></dialog>
+  <dialog id="cook" class="cook"></dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/twists.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
